@@ -1,0 +1,722 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ $json.company_name }} - Sua Referência em {{ $json.business_type }} em {{ $json.address }}</title>
+    <style>
+        /* Reset básico */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Variáveis de cor */
+        :root {
+            --primary-color: #007bff; /* Azul vibrante, pode ser ajustado */
+            --secondary-color: #6c757d; /* Cinza escuro para textos secundários */
+            --background-color: #ffffff; /* Branco limpo */
+            --accent-color: #28a745; /* Verde para botões de WhatsApp e sucesso */
+            --footer-bg: #f8f9fa; /* Cinza claro para rodapé */
+            --card-bg: #f8f9fa; /* Fundo levemente cinza para cards */
+            --text-color: #333;
+            --heading-color: #000;
+        }
+
+        /* Estilos Gerais */
+        body {
+            font-family: 'Montserrat', sans-serif; /* Fonte moderna e elegante */
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--heading-color);
+            margin-bottom: 20px;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #0056b3; /* Tom mais escuro do azul */
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            box-shadow: 0 6px 12px rgba(0, 123, 255, 0.4);
+        }
+
+        .btn-whatsapp {
+            background-color: var(--accent-color);
+            color: #fff;
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-whatsapp:hover {
+            background-color: #218838;
+            box-shadow: 0 6px 12px rgba(40, 167, 69, 0.4);
+        }
+
+        /* Estilos do Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://via.placeholder.com/1600x800?text={{ urlencode($json['business_type']) }}+Elegante') no-repeat center center/cover; /* Imagem placeholder genérica, substituir por imagem real */
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .hero-content {
+            max-width: 700px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            color: #fff;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #eee;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+        }
+
+        /* Estilos da Seção Sobre */
+        .sobre {
+            padding: 80px 0;
+            background-color: var(--background-color);
+        }
+
+        .sobre .container {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .sobre-text {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .sobre-text h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--heading-color);
+        }
+
+        .sobre-text p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        /* Estilos dos Serviços */
+        .servicos {
+            padding: 80px 0;
+            background-color: var(--card-bg);
+            text-align: center;
+        }
+
+        .servicos h2 {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: var(--heading-color);
+        }
+
+        .servicos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .servico-card {
+            background-color: var(--background-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .servico-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .servico-card img {
+            width: 100%;
+            height: 200px; /* Altura fixa para imagens de serviço */
+            object-fit: cover; /* Garante que a imagem cubra a área sem distorcer */
+            display: block;
+        }
+
+        .servico-content {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .servico-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--heading-color);
+        }
+
+        .servico-content p {
+            font-size: 1rem;
+            margin-bottom: 20px;
+            color: var(--secondary-color);
+        }
+
+        /* Estilos das Avaliações */
+        .avaliacoes {
+            padding: 80px 0;
+            background-color: var(--background-color);
+            text-align: center;
+        }
+
+        .avaliacoes h2 {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: var(--heading-color);
+        }
+
+        .avaliacao-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .avaliacao-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 30px;
+            max-width: 350px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: left;
+        }
+
+        .avaliacao-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+        }
+
+        .avaliacao-meta {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .avaliacao-meta .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .avaliacao-meta .nome-nota {
+            flex-grow: 1;
+        }
+
+        .avaliacao-meta .nome {
+            font-weight: 600;
+            color: var(--heading-color);
+            font-size: 1.1rem;
+        }
+
+        .avaliacao-meta .estrelas {
+            color: #FFD700; /* Cor do ouro */
+            font-size: 1.2rem;
+        }
+
+        .avaliacao-card p {
+            font-size: 1rem;
+            color: var(--secondary-color);
+            margin-bottom: 0;
+        }
+
+        /* Estilos dos Diferenciais */
+        .diferenciais {
+            padding: 80px 0;
+            background-color: var(--card-bg);
+            text-align: center;
+        }
+
+        .diferenciais h2 {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: var(--heading-color);
+        }
+
+        .diferenciais-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .diferencial-item {
+            background-color: var(--background-color);
+            border-radius: 8px;
+            padding: 30px 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .diferencial-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+        }
+
+        .diferencial-item i { /* Ícone (se usar Font Awesome ou similar) */
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .diferencial-item h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--heading-color);
+        }
+
+        .diferencial-item p {
+            font-size: 1rem;
+            color: var(--secondary-color);
+            margin-bottom: 0;
+        }
+
+        /* Estilos do Contato */
+        .contato {
+            padding: 80px 0;
+            background-color: var(--background-color);
+            text-align: center;
+        }
+
+        .contato h2 {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: var(--heading-color);
+        }
+
+        .contato-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            text-align: left;
+        }
+
+        .contato-info {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .contato-info h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--heading-color);
+        }
+
+        .contato-info p {
+            font-size: 1.1rem;
+            color: var(--secondary-color);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .contato-info p i {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+        }
+
+        .contato-info a {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .contato-cta {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .contato-cta p {
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+        }
+
+        /* Botão Flutuante WhatsApp */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+        }
+
+        /* Rodapé */
+        .footer {
+            background-color: var(--footer-bg);
+            color: var(--secondary-color);
+            padding: 40px 0;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .footer .container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .footer .social-links a {
+            margin: 0 10px;
+            color: var(--secondary-color);
+        }
+
+        .footer .social-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .sobre .container,
+            .contato-grid {
+                flex-direction: column;
+            }
+
+            .sobre-text,
+            .contato-info,
+            .contato-cta {
+                width: 100%;
+                text-align: center;
+            }
+
+            .sobre-text {
+                order: 2;
+            }
+
+            .servicos-grid,
+            .diferenciais-grid,
+            .avaliacao-container {
+                grid-template-columns: 1fr;
+            }
+
+            .servico-card,
+            .avaliacao-card,
+            .diferencial-item,
+            .contato-info,
+            .contato-cta {
+                width: 100%;
+            }
+
+            .whatsapp-float {
+                bottom: 15px;
+                right: 15px;
+            }
+        }
+
+        /* Estilos para infelizmente não ter FontAwesome, simulando ícones */
+        .icon-placeholder::before {
+            content: '★'; /* Estrela genérica */
+            display: inline-block;
+            margin-right: 10px;
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .icon-telefone::before {
+            content: '📞';
+            font-size: 1.3rem;
+            margin-right: 10px;
+        }
+
+        .icon-mapa::before {
+            content: '📍';
+            font-size: 1.3rem;
+            margin-right: 10px;
+        }
+
+        .icon-relogio::before {
+            content: '⏰';
+            font-size: 1.3rem;
+            margin-right: 10px;
+        }
+    </style>
+    <!-- Link para Google Fonts Montserrat -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Seção Hero -->
+    <header class="hero" id="hero">
+        <div class="hero-content">
+            <h1>Transforme seu dia com os melhores em {{ $json['business_type'] }}</h1>
+            <p>{{ $json['company_name'] }} oferece resultados excepcionais, cuidando de você com profissionalismo e paixão.</p>
+            <a href="https://wa.me/{{ preg_replace('/\D/', '', $json['phone']) }}" target="_blank" class="btn btn-primary btn-lg">Agende Seu Atendimento Agora</a>
+        </div>
+    </header>
+
+    <!-- Seção Sobre -->
+    <section class="sobre" id="sobre">
+        <div class="container">
+            <div class="sobre-text">
+                <h2>Sua Satisfação é Nossa Prioridade</h2>
+                <p>{{ $json['company_name'] }} nasceu do desejo de oferecer um serviço de {{ $json['business_type'] }} de excelência, combinando técnica apurada, produtos de alta qualidade e um atendimento que faz você se sentir único.</p>
+                <p>Com anos de experiência no mercado local, entendemos suas necessidades e estamos prontos para superar suas expectativas.</p>
+                <a href="https://wa.me/{{ preg_replace('/\D/', '', $json['phone']) }}" target="_blank" class="btn btn-primary">Saiba Mais e Agende</a>
+            </div>
+            <div class="sobre-image">
+                <!-- Imagem placeholder genérica para o Sobre, substituir por imagem que represente o negócio de forma elegante -->
+                <img src="https://via.placeholder.com/400x300?text=Ambiente+Aconchegante" alt="Ambiente da {{ $json['company_name'] }}" style="border-radius: 8px; max-width: 100%; height: auto;">
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Serviços -->
+    <section class="servicos" id="servicos">
+        <div class="container">
+            <h2>Nossos Serviços</h2>
+            <div class="servicos-grid">
+
+                <!-- Exemplo de Serviço 1 (Inferido pelo Business Type) -->
+                <div class="servico-card">
+                    <img src="https://via.placeholder.com/350x200?text=Serviço+Principal" alt="Descrição do Serviço 1">
+                    <div class="servico-content">
+                        <h3>Serviço Principal que Você Ama</h3>
+                        <p>Descubra como este serviço pode transformar sua aparência/bem-estar e te dar mais confiança no dia a dia.</p>
+                        <a href="https://wa.me/{{ preg_replace('/\D/', '', $json['phone']) }}" target="_blank" class="btn btn-secondary btn-block">Quero Agendar!</a>
+                    </div>
+                </div>
+
+                <!-- Exemplo de Serviço 2 (Inferido pelos Reviews ou Business Type) -->
+                <div class="servico-card">
+                    <img src="https://via.placeholder.com/350x200?text=Serviço+Destaque" alt="Descrição do Serviço 2">
+                    <div class="servico-content">
+                        <h3>O Serviço Que Todos Adoram</h3>
+                        <p>Experiência única focada em seus objetivos, com resultados visíveis e duradouros.</p>
+                         <a href="https://wa.me/{{ preg_replace('/\D/', '', $json['phone']) }}" target="_blank" class="btn btn-secondary btn-block">Experimente Agora</a>
+                    </div>
+                </div>
+
+                <!-- Exemplo de Serviço 3 (Inferido pelos Reviews ou Business Type) -->
+                <div class="servico-card">
+                    <img src="https://via.placeholder.com/350x200?text=Serviço+Exclusivo" alt="Descrição do Serviço 3">
+                    <div class="servico-content">
+                        <h3>Solução Personalizada para Você</h3>
+                        <p>Entregamos o que você precisa, com atenção aos detalhes e o cuidado que você merece.</p>
+                        <a href="https://wa.me/{{ preg_replace('/\D/', '', $json['phone']) }}" target="_blank" class="btn btn-secondary btn-block">Saiba Mais</a>
+                    </div>
+                </div>
+
+                <!-- Adicionar mais serviços conforme inferido ou fornecido -->
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Avaliações -->
+    <section class="avaliacoes" id="avaliacoes">
+        <div class="container">
+            <h2>O Que Nossos Clientes Dizem</h2>
+            <div class="avaliacao-container">
+
+                <!-- Exemplo de Avaliação 1 -->
+                <div class="avaliacao-card">
+                    <div class="avaliacao-meta">
+                        <div class="avatar">J</div>
+                        <div class="nome-nota">
+                            <div class="nome">Júlia S.</div>
+                            <div class="estrelas">★★★★★</div>
+                        </div>
+                    </div>
+                    <p>"Experiência incrível! Fui muito bem atendida e o resultado superou minhas expectativas. Recomendo demais!"</p>
+                </div>
+
+                <!-- Exemplo de Avaliação 2 -->
+                <div class="avaliacao-card">
+                    <div class="avaliacao-meta">
+                        <div class="avatar">M</div>
+                        <div class="nome-nota">
+                            <div class="nome">Marcos R.</div>
+                            <div class="estrelas">★★★★★</div>
+                        </div>
+                    </div>
+                    <p>"Profissionais qualificados e um ambiente super agradável. Saí renovado e muito satisfeito com o serviço."</p>
+                </div>
+
+                <!-- Exemplo de Avaliação 3 -->
+                <div class="avaliacao-card">
+                    <div class="avaliacao-meta">
+                        <div class="avatar">A</div>
+                        <div class="nome-nota">
+                            <div class="nome">Ana C.</div>
+                            <div class="estrelas">★★★★☆</div>
+                        </div>
+                    </div>
+                    <p>"Adorei o cuidado e a atenção. O atendimento foi pontual e o resultado impecável. Voltarei com certeza!"</p>
+                </div>
+
+                <!-- Você pode adicionar mais avaliações com base no {{ $json['reviews_text'] }} -->
+                <!-- Se houver muitos reviews, considere um carousel ou exibir os 3-4 mais impactantes -->
+            </div>
+            <p class="mt-4" style="font-size: 1.2rem; color: var(--secondary-color);">Sua nota média: <span class="estrelas" style="color: #FFD700;">{{ str_repeat('★', $json['rating']) }}{{ str_repeat('☆', 5 - $json['rating']) }}</span> ({{ $json['total_reviews'] }} avaliações)</p>
+        </div>
+    </section>
+
+    <!-- Seção Diferenciais -->
+    <section class="diferenciais" id="diferenciais">
+        <div class="container">
+            <h2>Por Que Escolher a {{ $json['company_name'] }}?</h2>
+            <div class="diferenciais-grid">
+                <div class="diferencial-item">
+                    <div class="icon-placeholder"></div>
+                    <h3>Expertise Comprovada</h3>
+                    <p>Equipe altamente qualificada e apaixonada por entregar resultados que te deixam feliz.</p>
+                </div>
+                <div class="diferencial-item">
+                    <div class="icon-placeholder"></div>
+                    <h3>Ambiente Aconchegante</h3>
+                    <p>Um espaço pensado para o seu conforto e relaxamento durante todo o atendimento.</p>
+                </div>
+                <div class="diferencial-item">
+                    <div class="icon-placeholder"></div>
+                    <h3>Qualidade Garantida</h3>
+                    <p>Utilizamos apenas os melhores produtos e técnicas para garantir a sua satisfação total.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Contato -->
+    <section class="contato" id="contato">
+        <div class="container">
+            <h2>Entre Em Contato Conosco</h2>
+            <div class="contato-grid">
+                <div class="contato-info">
+                    <h3>Fale Conosco</h3>
+                    <p><span class="icon-telefone"></span><strong>Telefone:</strong> {{ $json['phone'] }}</p>
+                    <p><span class="icon-mapa"></span><strong>Endereço:</strong> {{ $json['address'] }}</p>
+                    <p><span class="icon-relogio"></span><strong>Horário de Atendimento:</strong> {{ $json['opening_hours'] }}</p>
+                    <a href="https://wa.me/{{ preg_replace('/\D/', '', $json['phone']) }}" target="_blank" class="btn btn-primary btn-lg">Agendar pelo WhatsApp</a>
+                </div>
+                <div class="contato-cta">
+                    <p>Estamos prontos para transformar seu dia!</p>
+                    <p>Clique no botão abaixo e converse conosco pelo WhatsApp. É rápido, fácil e seguro.</p>
+                    <a href="https://wa.me/{{ preg_replace('/\D/', '', $json['phone']) }}" target="_blank" class="btn btn-whatsapp btn-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-circle"><path d="M21 11.5a8.38 8.38 0 0 0-15.59 3.72c-.787.362-1.248.796-1.248 1.245v.001c0 .438.354.86.877.86h.001c.33.001.558-.094.765-.187l.144-.074c.423-.228.765-.49.994-.819.375-.565.375-1.16.375-1.796v-.001c0-.144-.046-.266-.133-.377A6.95 6.95 0 0 0 18 13.5v-.001C18 11.833 16.667 10.5 15 10.5S12 11.833 12 13.5v.001c0 .777.375 1.44.916 1.826-.113.114-.173.277-.173.453v.001c0 .38.3.726.765.865l.144.074a2.676 2.676 0 0 0 1.192.277c.438.002.715-.048.877-.103.487-.157.907-.354 1.245-.568.574-.392 1.127-.699 1.796-.92.833-.297 1.406-.576 2.068-.769A2.676 2.676 0 0 0 21 11.5z"></path></svg>
+                        Chamar no WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Botão Flutuante de WhatsApp -->
+    <div class="whatsapp-float">
+        <a href="https://wa.me/{{ preg_replace('/\D/', '', $json['phone']) }}" target="_blank" class="btn btn-whatsapp btn-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-circle"><path d="M21 11.5a8.38 8.38 0 0 0-15.59 3.72c-.787.362-1.248.796-1.248 1.245v.001c0 .438.354.86.877.86h.001c.33.001.558-.094.765-.187l.144-.074c.423-.228.765-.49.994-.819.375-.565.375-1.16.375-1.796v-.001c0-.144-.046-.266-.133-.377A6.95 6.95 0 0 0 18 13.5v-.001C18 11.833 16.667 10.5 15 10.5S12 11.833 12 13.5v.001c0 .777.375 1.44.916 1.826-.113.114-.173.277-.173.453v.001c0 .38.3.726.765.865l.144.074a2.676 2.676 0 0 0 1.192.277c.438.002.715-.048.877-.103.487-.157.907-.354 1.245-.568.574-.392 1.127-.699 1.796-.92.833-.297 1.406-.576 2.068-.769A2.676 2.676 0 0 0 21 11.5z"></path></svg>
+        </a>
+    </div>
+
+    <!-- Rodapé -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2023 {{ $json['company_name'] }}. Todos os direitos reservados.</p>
+            <p>{{ $json['address'] }}</p>
+            <div class="social-links">
+                <!-- Links para redes sociais, se aplicável. Exemplo: -->
+                <!-- <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a> -->
+                <!-- <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a> -->
+            </div>
+        </div>
+    </footer>
+
+    <!-- Para SEO básico: adicionar meta tags relevantes se necessário -->
+    <meta name="description" content="Descubra os melhores serviços de {{ $json['business_type'] }} em {{ $json['address'] }}. {{ $json['company_name'] }} oferece qualidade, confiança e resultados que você busca. Agende seu atendimento!">
+    <meta name="keywords" content="{{ $json['business_type'] }}, {{ $json['address'] }}, serviços {{ $json['business_type'] }}, {{ strtolower(str_replace(' ', '-', $json['company_name'])) }}, atendimento {{ $json['business_type'] }}">
+    <meta name="robots" content="index, follow">
+
+</body>
+</html>
+```
